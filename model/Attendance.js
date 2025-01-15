@@ -15,7 +15,7 @@ const AttendanceSchema = new mongoose.Schema(
          default: "null",
       },
       user: {
-         type: ObjectId,
+         type: mongoose.Schema.ObjectId,
          ref: "User",
       },
    },

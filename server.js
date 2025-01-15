@@ -2,6 +2,8 @@ const express = require("express");
 const mongoose = require("mongoose");
 const myError = require("./utils/myError");
 const usersRoutes = require("./routes/user");
+const departmentsRoutes = require("./routes/department");
+const classesRoutes = require("./routes/class");
 const errorHandler = require("./middleware/error");
 const rateLimit = require("express-rate-limit");
 require("dotenv").config();
@@ -25,6 +27,8 @@ const limiter = rateLimit({
 app.use(limiter);
 
 app.use("/api/v1/users", usersRoutes);
+app.use("/api/v1/departments", departmentsRoutes);
+app.use("/api/v1/classes", classesRoutes);
 
 app.use(errorHandler);
 

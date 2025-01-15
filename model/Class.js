@@ -10,7 +10,7 @@ const ClassSchema = new mongoose.Schema({
       unique: true,
    },
    department: {
-      type: ObjectId,
+      type: mongoose.Schema.ObjectId,
       ref: "Department",
    },
 });
