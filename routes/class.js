@@ -19,7 +19,7 @@ router
 router
    .route("/:id")
    .get(protect, authorize(true, false), getClass)
-   .put(protect, authorize(true, false), updateClass)
-   .delete(protect, authorize(true, false), deleteClass);
+   .put(protect, authorize(true), updateClass)
+   .delete(protect, authorize(true), deleteClass);
 
 module.exports = router;

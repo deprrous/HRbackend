@@ -12,14 +12,14 @@ const router = express.Router();
 // api/v1/departments
 router
    .route("/")
-   .get(protect, authorize(true, false), getDepartments)
+   .get(getDepartments)
    .post(protect, authorize(true), createDepartment);
 
 // api/v1/departments/:id
 router
    .route("/:id")
    .get(protect, authorize(true, false), getDepartment)
-   .put(protect, authorize(true, false), updateDepartment)
-   .delete(protect, authorize(true, false), deleteDepartment);
+   .put(protect, authorize(true), updateDepartment)
+   .delete(protect, authorize(true), deleteDepartment);
 
 module.exports = router;

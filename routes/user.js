@@ -9,6 +9,8 @@ const {
    register,
    login,
    changePassword,
+   getUsersByClass,
+   getUsersByDepartment,
 } = require("../controller/user");
 const router = express.Router();
 
@@ -22,6 +24,12 @@ router.route("/register").post(register);
 
 // api/v1/users/login
 router.route("/login").post(login);
+router
+   .route("/getUsersByClass")
+   .get(protect, authorize(true, false), getUsersByClass);
+router
+   .route("/getUsersByDepartment")
+   .get(protect, authorize(true, false), getUsersByDepartment);
 
 // api/v1/users/changePassword
 router.route("/changePassword").put(protect, changePassword);

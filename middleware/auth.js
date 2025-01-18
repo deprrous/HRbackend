@@ -18,7 +18,7 @@ exports.authorize = function (...roles) {
    return (req, res, next) => {
       if (!roles.includes(req.admin))
          throw new myError(
-            "Таны эрх [" + "member" + "] энэ үйлдлийг хийх боломжгүй.",
+            "Таны эрх " + req.admin + "энэ үйлдлийг хийх боломжгүй.",
             403,
          );
 

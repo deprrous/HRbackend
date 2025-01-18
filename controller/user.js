@@ -138,3 +138,63 @@ exports.changePassword = asyncHandler(async (req, res, next) => {
       user: user,
    });
 });
+
+exports.getUsersByClass = asyncHandler(async (req, res, next) => {
+   const users = await User.find().populate("class", "className");
+
+   if (!users || users.length === 0) {
+      throw new myError("Хэрэглэгч бүртгэгдээгүй байна.", 404);
+   }
+
+   const data = {};
+
+   for (const user of users) {
+      const className = user.class?.className || "No Class";
+      if (!data[className]) {
+         data[className] = [];
+      }
+      data[className].push({
+         username: user.username,
+         role: user.role,
+         kurs: user.kurs,
+      });
+   }
+
+   res.status(200).json({
+      success: true,
+      data: data,
+   });
+});
+exports.getUsersByDepartment = asyncHandler(async (req, res, next) => {
+   const users = await User.find().populate({
+      path: "class",
+      populate: {
+         path: "department",
+         select: "departmentName",
+      },
+   });
+
+   if (!users || users.length === 0) {
+      throw new myError("Хэрэглэгч бүртгэгдээгүй байна.", 404);
+   }
+
+   const data = {};
+
+   for (const user of users) {
+      const departmentName =
+         user.class?.department?.departmentName || "No Department";
+      if (!data[departmentName]) {
+         data[departmentName] = [];
+      }
+      data[departmentName].push({
+         username: user.username,
+         role: user.role,
+         kurs: user.kurs,
+      });
+   }
+
+   res.status(200).json({
+      success: true,
+      data: data,
+   });
+});

@@ -10,7 +10,7 @@ exports.createClass = asyncHandler(async (req, res, nex) => {
    if (!angi) {
       throw new myError("Something wrong to create class", 401);
    }
-   req.status(200).json({
+   res.status(200).json({
       succes: true,
       data: angi,
    });
@@ -21,7 +21,7 @@ exports.updateClass = asyncHandler(async (req, res, nex) => {
       throw new myError(`Class not found id with ${req.params.id}`, 400);
    }
    if (!req.admin) {
-      throw new myError(`Уучлаарай та хэрэглэгчийг өөрчлөх эрхгүй байна.`, 400);
+      throw new myError(`Уучлаарай та class өөрчлөх эрхгүй байна.`, 400);
    }
 
    Object.keys(req.body).forEach((key) => {
@@ -38,7 +38,7 @@ exports.deleteClass = asyncHandler(async (req, res, nex) => {
    if (!angi) {
       throw new myError(`Class not found id with ${req.params.id}`, 400);
    }
-   if (req.admin !== true) {
+   if (!req.admin) {
       throw new myError(`Уучлаарай та class-ийг устгах эрхгүй байна.`, 400);
    }
    await angi.deleteOne();
