@@ -1,0 +1,48 @@
+name: SSH Connection Test (Self-Hosted)
+
+on:
+  workflow_dispatch:  # Manual trigger
+
+jobs:
+  test_ssh:
+    runs-on: self-hosted # IMPORTANT: Run on your self-hosted runner
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3 # Needed for creating .ssh directory
+
+      - name: Debug - Print Secrets (For Testing ONLY - REMOVE in Production)
+        run: |
+          echo "EC2_HOST: ${{ secrets.EC2_HOST }}"  # Verify host
+          echo "EC2_USER: ${{ secrets.EC2_USER }}"  # Verify user
+          echo "Private key begins: $(echo "${{ secrets.EC2_PRIVATE_KEY }}" | head -c 20)"  # First 20 chars of key
+
+      - name: Create SSH Key File
+        run: |
+          echo "${{ secrets.EC2_PRIVATE_KEY }}" > id_rsa  # Write key to file
+          chmod 600 id_rsa                                # Set correct permissions
+
+      - name: Get Host Key (Important!)
+        run: |
+          ssh-keyscan -p 22 ${{ secrets.EC2_HOST }} >> known_hosts
+          cat known_hosts # Optional: Print for debugging
+
+      - name: Add Host Key to known_hosts
+        run: |
+          mkdir -p ~/.ssh
+          cp known_hosts ~/.ssh/known_hosts
+
+      - name: SSH Connection Test
+        uses: appleboy/ssh-action@v0.1.0 # Or latest version
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key_path: id_rsa # Use the key file
+          port: 22
+          script: |
+            echo "SSH connection successful!"
+            hostname
+            whoami
+            uptime
+      - name: Cleanup Key File
+        if: always() # Always run even if previous steps fail
+        run: rm id_rsa      
